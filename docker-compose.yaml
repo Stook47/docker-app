@@ -1,0 +1,26 @@
+version: '3'
+services:
+  data-generator:
+    build:
+      context: ./data-generator
+    volumes:
+      - ./data-generator:/app
+    depends_on:
+      - data-store
+    environment:
+      - DATA_STORE_URL=data-store:5000
+
+  data-store:
+    image: redis:alpine
+
+  visualization-generator:
+    build:
+      context: ./visualization-generator
+    volumes:
+      - ./visualization-generator:/app
+    depends_on:
+      - data-store
+    ports:
+      - "8080:80"
+    environment:
+      - DATA_STORE_URL=data-store:5000
